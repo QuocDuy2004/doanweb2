@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.20.15/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide-react@0.441.0/dist/umd/lucide-react.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+      // Mobile Menu
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const overlay = document.getElementById("overlay");
+
+      mobileMenuButton.addEventListener("click", () => {
+        mobileMenu.classList.toggle("translate-x-0");
+        mobileMenu.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+
+      overlay.addEventListener("click", () => {
+        mobileMenu.classList.remove("translate-x-0");
+        mobileMenu.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+
+      // Theme Toggle
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeToggleDesktop = document.getElementById(
+        "theme-toggle-desktop"
+      );
+      const body = document.body;
+
+      const toggleTheme = () => {
+        if (body.getAttribute("data-theme") === "dark") {
+          body.removeAttribute("data-theme");
+          themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+          themeToggleDesktop.innerHTML = '<i class="fas fa-moon"></i>';
+          localStorage.setItem("theme", "light");
+        } else {
+          body.setAttribute("data-theme", "dark");
+          themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+          themeToggleDesktop.innerHTML = '<i class="fas fa-sun"></i>';
+          localStorage.setItem("theme", "dark");
+        }
+      };
+
+      themeToggle.addEventListener("click", toggleTheme);
+      themeToggleDesktop.addEventListener("click", toggleTheme);
+
+      if (localStorage.getItem("theme") === "dark") {
+        body.setAttribute("data-theme", "dark");
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        themeToggleDesktop.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+
+      // Swiper
+      const swiper = new Swiper(".hero-swiper", {
+        loop: true,
+        autoplay: { delay: 5000, disableOnInteraction: false },
+        pagination: { el: ".swiper-pagination", clickable: true },
+        effect: "slide",
+        speed: 800,
+      });
+
+      // Scroll Buttons
+      const comingSoonWrapper = document.getElementById("comingSoonWrapper");
+      const scrollLeftBtn = document.getElementById("scrollLeft");
+      const scrollRightBtn = document.getElementById("scrollRight");
+      const nowShowingWrapper = document.getElementById("nowShowingWrapper");
+      const nowScrollLeft = document.getElementById("nowScrollLeft");
+      const nowScrollRight = document.getElementById("nowScrollRight");
+      const scrollAmount = 300;
+
+      scrollLeftBtn.addEventListener("click", () => {
+        comingSoonWrapper.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      });
+
+      scrollRightBtn.addEventListener("click", () => {
+        comingSoonWrapper.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      });
+
+      nowScrollLeft.addEventListener("click", () => {
+        nowShowingWrapper.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+      });
+
+      nowScrollRight.addEventListener("click", () => {
+        nowShowingWrapper.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      });
+
+      // Modal Handling
+      const modalTriggers = document.querySelectorAll(
+        '[data-bs-toggle="modal"]'
+      );
+      const modalCloses = document.querySelectorAll(
+        '[data-bs-dismiss="modal"]'
+      );
+
+      modalTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", (e) => {
+          e.preventDefault();
+          const targetId = trigger.getAttribute("data-bs-target").substring(1);
+          const targetModal = document.getElementById(targetId);
+          targetModal.classList.add("show");
+          document.body.style.overflow = "hidden"; // Ngăn cuộn body khi modal mở
+        });
+      });
+
+      modalCloses.forEach((close) => {
+        close.addEventListener("click", () => {
+          const modal = close.closest(".modal");
+          modal.classList.remove("show");
+          document.body.style.overflow = "auto"; // Khôi phục cuộn body
+        });
+      });
+
+      // Đóng modal khi nhấp ra ngoài
+      document.querySelectorAll(".modal").forEach((modal) => {
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.classList.remove("show");
+            document.body.style.overflow = "auto";
+          }
+        });
+      });
+    </script>
+    <script>
+      window.Lucide.createIcons();
+    </script>
+  </body>
+</html>
